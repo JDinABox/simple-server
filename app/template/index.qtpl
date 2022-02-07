@@ -1,0 +1,27 @@
+{% code
+type Index struct {
+    Header string
+    Title string
+    BodyHtml string
+}
+%}
+
+{% stripspace %}
+{% func (i *Index) IndexTPL() %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{%s= i.Header %}
+		<title>{%s i.Title %}</title>
+	</head>
+	<body>
+		<div class="body">
+			{%s= i.BodyHtml %}
+		</div>
+	</body>
+</html>
+{% endfunc %}
+{% endstripspace %}
