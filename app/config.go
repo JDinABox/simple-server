@@ -15,6 +15,7 @@ import (
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 type Config struct {
+	Dev   bool `json:"-"`
 	Paths struct {
 		Assets string `json:"assets"`
 		Pages  string `json:"pages"`

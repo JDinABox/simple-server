@@ -39,28 +39,27 @@ func setup() {
 	logger.Fatal(err)
 	writeFile("config.json", confJson)
 
-	err = runCmd(pkgManager, "install")
-	logger.Fatal(err)
+	cmd := getCmd(pkgManager, "install")
+	logger.Fatal(cmd.Run())
 
-	err = runCmd(pkgManager, "run", "build")
-	logger.Fatal(err)
+	cmd = getCmd(pkgManager, "run", "build")
+	logger.Fatal(cmd.Run())
 
 	fmt.Printf("\nSuccess! Run %s to start the server\n", os.Args[0])
 }
 
-func runCmd(name string, args ...string) error {
+func getCmd(name string, args ...string) *exec.Cmd {
 	cmdPath, err := exec.LookPath(name)
 	if err != nil {
-		return err
+		logger.Fatal(err)
 	}
-	cmd := &exec.Cmd{
+	return &exec.Cmd{
 		Path:   cmdPath,
 		Args:   append([]string{cmdPath}, args...),
 		Stdin:  os.Stdin,
 		Stdout: os.Stdout,
 		Stderr: os.Stderr,
 	}
-	return cmd.Run()
 }
 
 func writeFiles(dir string) error {

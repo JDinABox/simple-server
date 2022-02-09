@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"runtime"
 	"strings"
@@ -12,7 +13,11 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/compress"
 )
 
-var configPath string
+var (
+	configPath string
+	dev        bool
+	build      bool
+)
 
 func init() {
 	var (
@@ -25,6 +30,8 @@ func init() {
 		configUsage   = "Path to config.json"
 		versionUsage  = "Returns version"
 		initUsage     = "Interactively create Simple Server project"
+		devUsage      = "Run package.json script dev & Start Server in Development mode"
+		buildUsage    = "Run package.json script build & Start Server"
 	)
 
 	if len(os.Args) > 1 {
@@ -35,6 +42,10 @@ func init() {
 			initialize = true
 		case "help", "h":
 			help = true
+		case "dev":
+			dev = true
+		case "build":
+			build = true
 		}
 	}
 
@@ -42,23 +53,27 @@ func init() {
 	flag.StringVar(&configPath, "c", defaultConfig, configUsage+" (shorthand)")
 	flag.BoolVar(&v, "version", v, versionUsage)
 	flag.BoolVar(&initialize, "init", initialize, initUsage)
+	flag.BoolVar(&dev, "dev", dev, devUsage)
+	flag.BoolVar(&dev, "D", dev, devUsage)
+	flag.BoolVar(&build, "build", build, buildUsage)
+	flag.BoolVar(&build, "b", build, buildUsage)
 
 	// Custom help message
 	flag.Usage = func() {
 		fmtVer()
 		fmt.Printf("Usage: simple-server [flags] [command] %s\n\n", simpleserver.Version)
 		// Config
-		fmt.Printf("  %s\n", "-c, -config string")
-		fmt.Printf("  	%s\n", configUsage)
+		usageLines("-c, -config string", configUsage)
+		// Dev
+		usageLines("-D, -dev, dev", devUsage)
+		// Build
+		usageLines("-B, -build, build", buildUsage)
 		// Version
-		fmt.Printf("  %s\n", "-version, version, v")
-		fmt.Printf("  	%s\n", versionUsage)
+		usageLines("-version, version, v", versionUsage)
 		// Init
-		fmt.Printf("  %s\n", "-init, init")
-		fmt.Printf("  	%s\n", initUsage)
+		usageLines("-init, init", initUsage)
 		// Help
-		fmt.Printf("  %s\n", "-help, -h, help, h")
-		fmt.Printf("  	%s\n", "Output usage (this message)")
+		usageLines("-h, -help, help, h", "Output usage (this message)")
 	}
 
 	flag.Parse()
@@ -82,16 +97,33 @@ func init() {
 func main() {
 	ss := simpleserver.New(configPath)
 	ss.AddOn(compress.New(compress.ConfigDefault))
+	ss.Config.Dev = dev
 
 	serverClosed := make(chan struct{})
 	go ss.AwaitAndClose(serverClosed)
 
-	logger.Error(ss.Start())
+	if ss.Config.Dev {
+		cmd := runDev()
+		defer func() {
+			log.Printf("Killing %s\n", cmd.Path)
+			cmd.Process.Signal(os.Kill)
+		}()
+	}
 
+	if build {
+		runBuild()
+	}
+
+	logger.Error(ss.Start())
 	<-serverClosed
 }
 
 // fmtVer print version
 func fmtVer() {
 	fmt.Printf("Simple Server v%s %s/%s\n", simpleserver.Version, runtime.GOOS, runtime.GOARCH)
+}
+
+func usageLines(flags, usageText string) {
+	fmt.Printf("  %s\n", flags)
+	fmt.Printf("  	%s\n", usageText)
 }

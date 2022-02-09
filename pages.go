@@ -2,7 +2,6 @@ package simpleserver
 
 import (
 	"io/fs"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -37,21 +36,26 @@ func (s *Server) Pages() {
 			publicPath = strings.TrimRight(publicPath, "index")
 		}
 
-		// Read html file
-		f, err := os.ReadFile(path)
-		if err != nil {
-			return err
+		if s.Config.Dev {
+			s.Fiber.Get(
+				publicPath,
+				app.PageDev(s.Config.GenHeader, path),
+			)
+		} else {
+			// Read html file
+			f := app.ReadPage(path)
+			// minify
+			f, err = m.Bytes("text/html", f)
+			if err != nil {
+				logger.Fatal(err)
+			}
+			// Add route to fiber
+			s.Fiber.Get(
+				publicPath,
+				app.Page(&template.Index{Header: s.Config.GenHeader, BodyHtml: string(f)}),
+			)
 		}
 
-		f, err = m.Bytes("text/html", f)
-		if err != nil {
-			logger.Fatal(err)
-		}
-		// Add route to fiber
-		s.Fiber.Get(
-			publicPath,
-			app.Page(&template.Index{Header: s.Config.GenHeader, BodyHtml: string(f)}),
-		)
 		return nil
 	}))
 }
