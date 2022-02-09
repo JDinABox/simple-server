@@ -35,7 +35,7 @@ func (i *Index) StreamIndexTPL(qw422016 *qt422016.Writer) {
 //line app/template/index.qtpl:18
 	qw422016.E().S(i.Title)
 //line app/template/index.qtpl:18
-	qw422016.N().S(`</title></head><body><div class="body">`)
+	qw422016.N().S(`</title></head><body class="dark" x-data :class="{'dark': $store.theme.dark}"><div>`)
 //line app/template/index.qtpl:22
 	qw422016.N().S(i.BodyHtml)
 //line app/template/index.qtpl:22

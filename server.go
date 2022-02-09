@@ -31,13 +31,12 @@ func New(confPath string) *Server {
 	s.Config = app.NewConfig(confPath)
 	logger.InitKlog(s.Config.Logs.Level, s.Config.Logs.Dir, s.Config.Logs.Path)
 
-	s.Fiber.Static("/assets", s.Config.Paths.Assets)
-
 	return s
 }
 
 func (s *Server) Start() error {
-	s.Fiber.Group("/", s.addOns...)
+	s.Fiber.Group("/*", s.addOns...)
+	s.Fiber.Static("/assets", s.Config.Paths.Assets, fiber.Static{Compress: true})
 	s.Pages()
 	// TODO SSL
 	return s.Fiber.Listen(":" + strconv.Itoa(s.Config.Port))

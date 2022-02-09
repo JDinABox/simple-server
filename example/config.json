@@ -1,0 +1,13 @@
+{
+  "paths": {
+    "assets": "./assets",
+    "pages": "./pages"
+  },
+  "headers": ["ss.umd.js", "style.css"],
+  "Logs": {
+    "level": 0,
+    "dir": false,
+    "path": ""
+  },
+  "port": 8080
+}

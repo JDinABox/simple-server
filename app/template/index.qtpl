@@ -17,8 +17,8 @@ type Index struct {
 		{%s= i.Header %}
 		<title>{%s i.Title %}</title>
 	</head>
-	<body>
-		<div class="body">
+	<body class="dark" x-data :class="{'dark': $store.theme.dark}">
+		<div>
 			{%s= i.BodyHtml %}
 		</div>
 	</body>
