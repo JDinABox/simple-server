@@ -76,7 +76,7 @@ func (c *Config) Default() {
 		c.Paths.Assets = "./assets"
 	}
 	if c.Paths.Pages == "" {
-		c.Paths.Pages = "./partalPages"
+		c.Paths.Pages = "./pages"
 	}
 	if c.Headers == nil {
 		c.Headers = []string{}

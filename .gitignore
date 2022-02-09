@@ -29,3 +29,5 @@ webfonts
 .pnp.*
 *.env
 !.example.env
+tmp
+*.gz

@@ -3,12 +3,16 @@
 package simpleserver
 
 import (
+	"log"
+	"os"
+	"os/signal"
 	"strconv"
 
 	"github.com/JDinABox/simple-server/app"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2"
 	jsoniter "github.com/json-iterator/go"
+	"k8s.io/klog/v2"
 )
 
 type Server struct {
@@ -44,4 +48,18 @@ func (s *Server) Start() error {
 
 func (s *Server) AddOn(m func(*fiber.Ctx) error) {
 	s.addOns = append(s.addOns, m)
+}
+
+func (s *Server) AwaitAndClose(serverClosed chan struct{}) {
+	sigint := make(chan os.Signal, 1)
+	signal.Notify(sigint, os.Interrupt)
+	<-sigint
+
+	log.Println("Shutting down Fiber")
+	logger.Error(s.Fiber.Shutdown())
+	log.Println("Flushing klog")
+	klog.Flush()
+
+	// Done
+	close(serverClosed)
 }
