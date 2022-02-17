@@ -3,7 +3,6 @@
     "assets": "./dist/assets",
     "pages": "./dist/pages"
   },
-  "headers": ["ss.umd.js", "style.css"],
   "logs": {
     "level": 0,
     "dir": false,
