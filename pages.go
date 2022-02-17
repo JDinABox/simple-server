@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/JDinABox/simple-server/app"
-	"github.com/JDinABox/simple-server/app/template"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/tdewolff/minify/v2"
 	"github.com/tdewolff/minify/v2/html"
@@ -39,7 +38,7 @@ func (s *Server) Pages() {
 		if s.Config.Dev {
 			s.Fiber.Get(
 				publicPath,
-				app.PageDev(s.Config.GenHeader, path),
+				app.PageDev(path),
 			)
 		} else {
 			// Read html file
@@ -52,7 +51,7 @@ func (s *Server) Pages() {
 			// Add route to fiber
 			s.Fiber.Get(
 				publicPath,
-				app.Page(&template.Index{Header: s.Config.GenHeader, BodyHtml: string(f)}),
+				app.Page(f),
 			)
 		}
 

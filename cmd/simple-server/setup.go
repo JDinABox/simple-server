@@ -34,7 +34,6 @@ func setup() {
 
 	// Write Config
 	conf := app.DefaultConfig()
-	conf.Headers = append(conf.Headers, "ss.umd.js", "style.css")
 	confJson, err := json.MarshalIndent(conf, "", "  ")
 	logger.Fatal(err)
 	writeFile("config.json", confJson)
@@ -96,14 +95,34 @@ func writeFiles(dir string) error {
 	return nil
 }
 
+var writeIter = ""
+
 func writeFile(path string, data []byte) error {
 	// Prompt if file exist
 	override := false
 	if _, err := os.Stat(path); err == nil {
-		survey.AskOne(&survey.Confirm{
-			Message: "Overide file " + path + "?",
-			Default: false,
-		}, &override)
+		if writeIter == "" {
+			err := survey.AskOne(&survey.Select{
+				Message: "Existing file(s) found. Override?",
+				Options: []string{"skip", "examine", "all"},
+				Default: "skip",
+			}, &writeIter)
+			if err != nil {
+				klog.Fatal(err)
+			}
+		}
+
+		switch writeIter {
+		case "all":
+			override = true
+		case "skip":
+			break
+		default:
+			survey.AskOne(&survey.Confirm{
+				Message: "Overide file " + path + "?",
+				Default: false,
+			}, &override)
+		}
 	} else if os.IsNotExist(err) {
 		override = true
 	} else {

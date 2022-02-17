@@ -1,7 +1,7 @@
 {
   "paths": {
-    "assets": "./assets",
-    "pages": "./pages"
+    "assets": "./dist/assets",
+    "pages": "./dist/pages"
   },
   "headers": ["ss.umd.js", "style.css"],
   "logs": {

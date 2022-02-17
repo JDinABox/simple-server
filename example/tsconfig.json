@@ -9,8 +9,8 @@
     "types": ["vite/client"],
     "baseUrl": "./",
     "paths": {
-      "@/*": ["lib/*"]
+      "@/*": ["src/*"]
     }
   },
-  "include": ["lib/**/*"]
+  "include": ["src/**/*"]
 }
