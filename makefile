@@ -7,8 +7,5 @@ build:
 install:
 	go install -ldflags="-s -w" ./cmd/simple-server
 
-qtc:
-	qtc -dir=app/template
-
 docker-build:
 	docker build --tag simple-server:latest . 

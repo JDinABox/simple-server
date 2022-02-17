@@ -8,7 +8,7 @@
     
     <script type="module" crossorigin src="/assets/main.b29cd709.js"></script>
     <link rel="modulepreload" href="/assets/vendor.e37d749c.js">
-    <link rel="stylesheet" href="/assets/main.c798dd6e.css">
+    <link rel="stylesheet" href="/assets/main.8a5f1439.css">
   </head>
   <body class="dark" x-data :class="{'dark': $store.theme.dark}">
     <div>
@@ -16,7 +16,9 @@
         x-init="$store.title = 'Home'"
         class="flex flex-col flex-grow min-h-screen bg-gray-50 dark:bg-gray-900"
       >
-        <div class="flex items-center justify-between p-7">
+        <div
+          class="flex items-center justify-between px-4 py-7 sm:px-6 md:px-8 lg:px-10"
+        >
           <div
             class="text-xl font-bold leading-5 text-slate-900 dark:text-white"
           >
@@ -25,7 +27,7 @@
           <div class="flex">
             <div
               @click="$store.theme.toggle()"
-              class="w-6 h-6 mr-4 cursor-pointer"
+              class="mr-4 cursor-pointer w-[26px] h-[26px]"
             >
               <div x-show="$store.theme.dark" class="text-yellow-400">
                 <!-- Copyright (c) 2020 Refactoring UI Inc. | MIT License https://github.com/tailwindlabs/heroicons/blob/master/LICENSE -->
@@ -60,7 +62,7 @@
                 </svg>
               </div>
             </div>
-            <div class="w-6 h-6 text-black dark:text-white">
+            <div class="text-black w-[26px] h-[26px] dark:text-white">
               <a
                 rel="noopener noreferrer"
                 target="_blank"
