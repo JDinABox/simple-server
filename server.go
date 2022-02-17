@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"time"
 
 	"github.com/JDinABox/simple-server/app"
 	"github.com/allocamelus/allocamelus/pkg/logger"
@@ -38,9 +39,24 @@ func New(confPath string) *Server {
 	return s
 }
 
+var (
+	cacheDuration = 24 * time.Hour
+	maxAge        = 60 * 60 * 24 * 356 // 1 year
+)
+
 func (s *Server) Start() error {
+	// Load addons
 	s.Fiber.Group("/*", s.addOns...)
-	s.Fiber.Static("/assets", s.Config.Paths.Assets, fiber.Static{Compress: true})
+
+	// Setup static file serving
+	static := fiber.Static{}
+	if !s.Config.Dev {
+		static.CacheDuration = cacheDuration
+		static.MaxAge = maxAge
+	}
+	s.Fiber.Static("/assets", s.Config.Paths.Assets, static)
+
+	// Load page paths
 	s.Pages()
 	// TODO SSL
 	return s.Fiber.Listen(":" + strconv.Itoa(s.Config.Port))

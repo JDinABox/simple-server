@@ -119,7 +119,7 @@ func (h *HeaderPaths) genHeader() string {
 	for _, v := range h.JS {
 		header.WriteString(`<script src="/`)
 		header.WriteString(v)
-		header.WriteString(`" defer></script>`)
+		header.WriteString(`" async></script>`)
 	}
 
 	for _, v := range h.CSS {

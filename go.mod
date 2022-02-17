@@ -4,8 +4,8 @@ go 1.17
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.2
-	github.com/allocamelus/allocamelus v0.0.0-20220204074806-becc35ffbba7
-	github.com/gofiber/fiber/v2 v2.26.0
+	github.com/allocamelus/allocamelus v0.0.0-20220209044545-7190b3b2f76b
+	github.com/gofiber/fiber/v2 v2.27.0
 	github.com/tdewolff/minify/v2 v2.10.0
 )
 
@@ -31,6 +31,6 @@ require (
 require (
 	github.com/json-iterator/go v1.1.12
 	github.com/valyala/quicktemplate v1.7.0
-	golang.org/x/sys v0.0.0-20220207234003-57398862261d // indirect
+	golang.org/x/sys v0.0.0-20220209214540-3681064d5158 // indirect
 	k8s.io/klog/v2 v2.40.1
 )

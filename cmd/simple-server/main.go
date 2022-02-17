@@ -11,6 +11,7 @@ import (
 	simpleserver "github.com/JDinABox/simple-server"
 	"github.com/allocamelus/allocamelus/pkg/logger"
 	"github.com/gofiber/fiber/v2/middleware/compress"
+	"github.com/gofiber/fiber/v2/middleware/etag"
 )
 
 var (
@@ -96,7 +97,6 @@ func init() {
 
 func main() {
 	ss := simpleserver.New(configPath)
-	ss.AddOn(compress.New(compress.ConfigDefault))
 	ss.Config.Dev = dev
 
 	serverClosed := make(chan struct{})
@@ -108,6 +108,9 @@ func main() {
 			log.Printf("Killing %s\n", cmd.Path)
 			cmd.Process.Signal(os.Kill)
 		}()
+	} else {
+		ss.AddOn(compress.New(compress.ConfigDefault))
+		ss.AddOn(etag.New(etag.ConfigDefault))
 	}
 
 	if build {
