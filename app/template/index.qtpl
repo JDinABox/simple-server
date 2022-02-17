@@ -1,7 +1,6 @@
 {% code
 type Index struct {
     Header string
-    Title string
     BodyHtml string
 }
 %}
@@ -15,7 +14,7 @@ type Index struct {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
 		{%s= i.Header %}
-		<title>{%s i.Title %}</title>
+		<title x-data x-text="$store.title">Index</title>
 	</head>
 	<body class="dark" x-data :class="{'dark': $store.theme.dark}">
 		<div>

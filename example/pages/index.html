@@ -1,4 +1,7 @@
-<div class="flex flex-col flex-grow bg-gray-50 dark:bg-gray-900">
+<div
+  x-init="$store.title = 'Home'"
+  class="flex flex-col flex-grow min-h-screen bg-gray-50 dark:bg-gray-900"
+>
   <div class="flex items-center justify-between p-7">
     <div class="text-xl font-bold leading-5 text-slate-900 dark:text-white">
       <a href="/">Simple Server</a>
@@ -20,7 +23,11 @@
             />
           </svg>
         </div>
-        <div x-show="!$store.theme.dark" class="text-sky-900">
+        <div
+          x-show="!$store.theme.dark"
+          class="text-sky-900"
+          style="display: none"
+        >
           <!-- Copyright (c) 2020 Refactoring UI Inc. | MIT License https://github.com/tailwindlabs/heroicons/blob/master/LICENSE -->
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +42,11 @@
         </div>
       </div>
       <div class="w-6 h-6 text-black dark:text-white">
-        <a href="https://github.com/JDinABox/simple-server">
+        <a
+          rel="noopener noreferrer"
+          target="_blank"
+          href="https://github.com/JDinABox/simple-server"
+        >
           <!-- Copyright (c) 2020 Modulz | MIT License https://github.com/radix-ui/icons/blob/master/LICENSE -->
           <svg
             class="w-full h-full"
@@ -63,7 +74,7 @@
       Quickly develop and deploy interactive static HTML sites
     </h1>
     <div
-      class="max-w-3xl mx-auto mt-4 font-bold text-center text-slate-900 dark:text-slate-100"
+      class="max-w-3xl mx-auto mt-4 font-sans text-lg text-center text-slate-700 dark:text-slate-300"
     >
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
       commodo placerat lectus, eget ornare justo porttitor id. Aliquam dui
@@ -76,5 +87,25 @@
       amet augue sed vulputate.
     </div>
   </div>
-  <footer class="flex"></footer>
+  <footer
+    class="flex justify-center py-4 text-sm bg-gray-200 text-slate-900 self-bottom px-7 dark:bg-gray-800 dark:text-slate-50"
+  >
+    <div
+      class="self-center font-semibold"
+      x-text="`© ${new Date().getFullYear()}`"
+    >
+      © 2022
+    </div>
+    <div class="flex dash-before">
+      Powered By
+      <a
+        rel="noopener noreferrer"
+        target="_blank"
+        class="ml-1 font-semibold"
+        href="https://github.com/JDinABox/simple-server"
+      >
+        Simple Server
+      </a>
+    </div>
+  </footer>
 </div>

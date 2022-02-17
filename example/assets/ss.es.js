@@ -45,7 +45,7 @@ var __toModule = (module) => {
 var require_shared_cjs = __commonJS((exports) => {
   Object.defineProperty(exports, "__esModule", { value: true });
   function makeMap(str, expectsLowerCase) {
-    const map = Object.create(null);
+    const map = /* @__PURE__ */ Object.create(null);
     const list = str.split(",");
     for (let i = 0; i < list.length; i++) {
       map[list[i]] = true;
@@ -349,7 +349,7 @@ var require_shared_cjs = __commonJS((exports) => {
   var isIntegerKey = (key) => isString(key) && key !== "NaN" && key[0] !== "-" && "" + parseInt(key, 10) === key;
   var isReservedProp = /* @__PURE__ */ makeMap(",key,ref,onVnodeBeforeMount,onVnodeMounted,onVnodeBeforeUpdate,onVnodeUpdated,onVnodeBeforeUnmount,onVnodeUnmounted");
   var cacheStringFunction = (fn) => {
-    const cache = Object.create(null);
+    const cache = /* @__PURE__ */ Object.create(null);
     return (str) => {
       const hit = cache[str];
       return hit || (cache[str] = fn(str));
@@ -450,7 +450,7 @@ var require_shared = __commonJS((exports, module) => {
 var require_reactivity_cjs = __commonJS((exports) => {
   Object.defineProperty(exports, "__esModule", { value: true });
   var shared = require_shared();
-  var targetMap = new WeakMap();
+  var targetMap = /* @__PURE__ */ new WeakMap();
   var effectStack = [];
   var activeEffect;
   var ITERATE_KEY = Symbol("iterate");
@@ -535,11 +535,11 @@ var require_reactivity_cjs = __commonJS((exports) => {
     }
     let depsMap = targetMap.get(target);
     if (!depsMap) {
-      targetMap.set(target, depsMap = new Map());
+      targetMap.set(target, depsMap = /* @__PURE__ */ new Map());
     }
     let dep = depsMap.get(key);
     if (!dep) {
-      depsMap.set(key, dep = new Set());
+      depsMap.set(key, dep = /* @__PURE__ */ new Set());
     }
     if (!dep.has(activeEffect)) {
       dep.add(activeEffect);
@@ -559,7 +559,7 @@ var require_reactivity_cjs = __commonJS((exports) => {
     if (!depsMap) {
       return;
     }
-    const effects = new Set();
+    const effects = /* @__PURE__ */ new Set();
     const add2 = (effectsToAdd) => {
       if (effectsToAdd) {
         effectsToAdd.forEach((effect4) => {
@@ -1004,10 +1004,10 @@ var require_reactivity_cjs = __commonJS((exports) => {
       console.warn(`Reactive ${type} contains both the raw and reactive versions of the same object${type === `Map` ? ` as keys` : ``}, which can lead to inconsistencies. Avoid differentiating between the raw and reactive versions of an object and only use the reactive version if possible.`);
     }
   }
-  var reactiveMap = new WeakMap();
-  var shallowReactiveMap = new WeakMap();
-  var readonlyMap = new WeakMap();
-  var shallowReadonlyMap = new WeakMap();
+  var reactiveMap = /* @__PURE__ */ new WeakMap();
+  var shallowReactiveMap = /* @__PURE__ */ new WeakMap();
+  var readonlyMap = /* @__PURE__ */ new WeakMap();
+  var shallowReadonlyMap = /* @__PURE__ */ new WeakMap();
   function targetTypeMap(rawType) {
     switch (rawType) {
       case "Object":
@@ -1267,6 +1267,12 @@ function queueJob(job) {
     queue.push(job);
   queueFlush();
 }
+function dequeueJob(job) {
+  const index2 = queue.indexOf(job);
+  if (index2 !== -1) {
+    queue.splice(index2, 1);
+  }
+}
 function queueFlush() {
   if (!flushing && !flushPending) {
     flushPending = true;
@@ -1313,7 +1319,7 @@ function elementBoundEffect(el) {
   let wrappedEffect = (callback) => {
     let effectReference = effect(callback);
     if (!el._x_effects) {
-      el._x_effects = new Set();
+      el._x_effects = /* @__PURE__ */ new Set();
       el._x_runEffects = () => {
         el._x_effects.forEach((i) => i());
       };
@@ -1411,8 +1417,8 @@ function onMutate(mutations) {
   }
   let addedNodes = [];
   let removedNodes = [];
-  let addedAttributes = new Map();
-  let removedAttributes = new Map();
+  let addedAttributes = /* @__PURE__ */ new Map();
+  let removedAttributes = /* @__PURE__ */ new Map();
   for (let i = 0; i < mutations.length; i++) {
     if (mutations[i].target._x_ignoreMutationObserver)
       continue;
@@ -1747,7 +1753,7 @@ function attributesOnly(attributes) {
   return Array.from(attributes).map(toTransformedAttributes()).filter((attr) => !outNonAlpineAttributes(attr));
 }
 var isDeferringHandlers = false;
-var directiveHandlerStacks = new Map();
+var directiveHandlerStacks = /* @__PURE__ */ new Map();
 var currentHandlerStackKey = Symbol();
 function deferHandlingDirectives(callback) {
   isDeferringHandlers = true;
@@ -1843,6 +1849,7 @@ var directiveOrder = [
   "init",
   "for",
   "model",
+  "modelable",
   "transition",
   "show",
   "if",
@@ -2016,7 +2023,10 @@ function setStylesFromObject(el, value) {
   let previousStyles = {};
   Object.entries(value).forEach(([key, value2]) => {
     previousStyles[key] = el.style[key];
-    el.style.setProperty(kebabCase(key), value2);
+    if (!key.startsWith("--")) {
+      key = kebabCase(key);
+    }
+    el.style.setProperty(key, value2);
   });
   setTimeout(() => {
     if (el.style.length === 0) {
@@ -2582,7 +2592,7 @@ var Alpine = {
   get raw() {
     return raw;
   },
-  version: "3.8.1",
+  version: "3.9.0",
   flushAndStopDeferringMutations,
   disableEffectScheduling,
   setReactivityEngine,
@@ -2684,6 +2694,29 @@ magic("id", (el) => (name, key = null) => {
   return key ? `${name}-${id}-${key}` : `${name}-${id}`;
 });
 magic("el", (el) => el);
+directive("modelable", (el, { expression }, { effect: effect3, evaluate: evaluate2, evaluateLater: evaluateLater2 }) => {
+  let func = evaluateLater2(expression);
+  let innerGet = () => {
+    let result;
+    func((i) => result = i);
+    return result;
+  };
+  let evaluateInnerSet = evaluateLater2(`${expression} = __placeholder`);
+  let innerSet = (val) => evaluateInnerSet(() => {
+  }, { scope: { __placeholder: val } });
+  let initialValue = innerGet();
+  if (el._x_modelable_hook)
+    initialValue = el._x_modelable_hook(initialValue);
+  innerSet(initialValue);
+  queueMicrotask(() => {
+    if (!el._x_model)
+      return;
+    let outerGet = el._x_model.get;
+    let outerSet = el._x_model.set;
+    effect3(() => innerSet(outerGet()));
+    effect3(() => outerSet(innerGet()));
+  });
+});
 directive("teleport", (el, { expression }, { cleanup }) => {
   if (el.tagName.toLowerCase() !== "template")
     warn("x-teleport can only be used on a <template> tag", el);
@@ -3132,6 +3165,9 @@ function loop(el, iteratorNames, evaluateItems, evaluateKey) {
     }
     for (let i = 0; i < removes.length; i++) {
       let key = removes[i];
+      if (!!lookup[key]._x_effects) {
+        lookup[key]._x_effects.forEach(dequeueJob);
+      }
       lookup[key].remove();
       lookup[key] = null;
       delete lookup[key];
@@ -3244,6 +3280,11 @@ directive("if", (el, { expression }, { effect: effect3, cleanup }) => {
     });
     el._x_currentIfEl = clone2;
     el._x_undoIf = () => {
+      walk(clone2, (node) => {
+        if (!!node._x_effects) {
+          node._x_effects.forEach(dequeueJob);
+        }
+      });
       clone2.remove();
       delete el._x_currentIfEl;
     };
@@ -3293,10 +3334,10 @@ let theme = {
   },
   dark: true,
   toggle() {
-    console.log(this.dark);
     this.dark = !this.dark;
     localStorage.setItem("theme-dark", JSON.stringify(this.dark));
   }
 };
 module_default.store("theme", theme);
+module_default.store("title", "Index");
 module_default.start();

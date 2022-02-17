@@ -14,13 +14,12 @@ let theme = {
   },
   dark: true,
   toggle() {
-    console.log(this.dark);
-
     this.dark = !this.dark;
     localStorage.setItem("theme-dark", JSON.stringify(this.dark));
   },
 };
 
 Alpine.store("theme", theme);
+Alpine.store("title", "Index");
 
 Alpine.start();
