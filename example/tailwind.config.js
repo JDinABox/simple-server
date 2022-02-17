@@ -1,9 +1,5 @@
 module.exports = {
-  content: [
-    "./lib/**/*.{vue,js,ts,jsx,tsx}",
-    "./pages/**/*.html",
-    "../app/template/**/*.qtpl",
-  ],
+  content: ["./lib/**/*.{vue,js,ts,jsx,tsx}", "./pages/**/*.html"],
   darkMode: "class",
   theme: {
     extend: {},
